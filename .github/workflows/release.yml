@@ -36,7 +36,7 @@ jobs:
       - name: Checkout Master and merge reference with default commit message
         run: | 
           git checkout master
-          git merge ${{ github.event.inputs.commit-hash-branch }} --no-edit
+          git merge ${{ github.event.inputs.commit-hash-branch }} --strategy-option theirs --no-edit
 
       - name: Update versions on poms and commit(If the version is the same with what is already in the pom the build will fail)
         run: |
