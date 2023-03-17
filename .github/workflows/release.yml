@@ -69,11 +69,35 @@ jobs:
           echo "VERSIONS_RANGE: ${VERSIONS_RANGE}"
           git log --pretty="%s" ${VERSIONS_RANGE} > changelog.txt
 
+      - name: Curate changelog to releaselog
+        run: |
+          grep -i '^feat\|feature' changelog.txt > feature.txt || true
+          grep -i '^debt' changelog.txt > debt.txt || true
+          grep -i '^bug' changelog.txt > bug.txt || true
+          grep -i -v '^feat\|feature\|debt\|bug' changelog.txt > miscellaneous.txt || true
+          
+          echo -e "FEATURES:" >> releaselog.txt
+          cat feature.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+          
+          echo -e "DEBT:" >> releaselog.txt
+          cat debt.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+          
+          echo -e "BUGS:" >> releaselog.txt
+          cat bug.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+          
+          echo -e "MISCELLANEOUS:" >> releaselog.txt
+          cat miscellaneous.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+          cat releaselog.txt
+
       - name: Create Github release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          bodyFile: "changelog.txt"
+          bodyFile: "releaselog.txt"
           tag: v${{ github.event.inputs.release-version }}
           draft: true
 
