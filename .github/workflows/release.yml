@@ -36,6 +36,18 @@ jobs:
       - name: Create release branch
         run:  git checkout -b release/v${{ github.event.inputs.release-version }}
 
+      - name: Update versions on poms and commit(If the version is the same with what is already in the pom the build will fail)
+        run: |
+          mvn versions:set -DnewVersion=${{ github.event.inputs.release-version }} -DgenerateBackupPoms=false --quiet
+          find . -name 'pom.xml' | xargs git add
+          git commit -m "Set release version ${{ github.event.inputs.release-version }}"
+
+      - name: Push release branch
+        run: git push -u origin release/v${{ github.event.inputs.release-version }}
+
+
+
+######################
 #      - name: Checkout Master and merge reference with default commit message
 #        run: |
 #          git checkout master
