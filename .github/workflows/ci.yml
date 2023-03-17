@@ -1,5 +1,11 @@
 name: CI
 
+#Requires inherited secrets:
+# GITHUB_TOKEN
+# SONAR_TOKEN
+# REPOSITORY_USERNAME (maven)
+# REPOSITORY_PASSWORD (maven)
+# PERSONAL_ACCESS_TOKEN
 on:
   workflow_call:
     inputs:
