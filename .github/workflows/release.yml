@@ -6,10 +6,12 @@ on:
       release-version:
         description: 'The version of the intended release, should be just a number'
         required: true
+        type: string
       commit-hash-branch:
         description: 'The commit hash or branch to use as a base for the merge and release(default: develop)'
         required: false
         default: develop
+        type: string
 
 jobs:
   release:
