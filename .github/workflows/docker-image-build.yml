@@ -36,16 +36,13 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: target-jars
+      - name: Set dynamic environment variables
+        run: |
+          echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')" >> $GITHUB_ENV
+          echo "GIT_REVISION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - name: Build Docker Image
         run: |
-          echo "Starting docker build ${IMAGE_NAME}"
-
-          GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
-          #When using Jenkins git, we need to get the variable from the input otherwise it points to HEAD with the above command
-          #GIT_BRANCH=$(echo "${BRANCH}" | sed 's/[^a-zA-Z0-9]/-/g')
-          GIT_REVISION=$(git rev-parse --short HEAD)
-          PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-
           set -x
           #Docker build
           docker build  \
