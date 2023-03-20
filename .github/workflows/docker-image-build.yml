@@ -52,9 +52,7 @@ jobs:
           -f ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
           set +x
       - name: Docker Login
-        run: |
-          #Docker login
-          echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
+        run: echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
       - name: Docker Push
         run: |
           set -x
