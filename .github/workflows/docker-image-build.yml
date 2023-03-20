@@ -1,0 +1,65 @@
+
+#Requires inherited secrets:
+# DOCKER_HUB_USERNAME
+# DOCKER_HUB_PASSWORD
+# target-jars pre-uploaded artifacts
+on:
+  workflow_call:
+    inputs:
+      docker-organization:
+        description: 'Docker Organization'
+        required: true
+        type: string
+      docker-image-name:
+        description: 'Docker Image Name'
+        required: true
+        type: string
+      project-path:
+        description: 'Project Path'
+        required: true
+        type: string
+
+jobs:
+  docker-image-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/download-artifact@v3
+        with:
+          name: target-jars
+      - name: Build Docker Image
+        run: |
+          ORGANIZATION=${{ inputs.docker-organization }}
+          IMAGE_NAME=${{ inputs.docker-image-name }}
+          echo "Starting docker build ${IMAGE_NAME}\n"
+
+          GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
+          #When using Jenkins git, we need to get the variable from the input otherwise it points to HEAD with the above command
+          #GIT_BRANCH=$(echo "${BRANCH}" | sed 's/[^a-zA-Z0-9]/-/g')
+          GIT_REVISION=$(git rev-parse --short HEAD)
+          PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          PROJECT_PATH=${{ inputs.project-path }}
+
+          set -x
+          #Docker build
+          docker build  \
+          -t ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
+          -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
+          -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
+          -f ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
+          set +x
+      - name: Docker Login
+        run: |
+          #Docker login
+          echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
+      - name: Docker Push
+        run: |
+          set -x
+          #Docker push image with all tags(subsequent tags do not transmit data again)
+          docker push ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION}
+          docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH}
+          docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION}
+          set +x

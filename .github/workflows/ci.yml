@@ -77,9 +77,6 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
-      - uses: actions/download-artifact@v3
-        with:
-          name: target-jars
       - name: Prepare Settings Deploy
         run: >
           mkdir -p ~/.m2 &&
@@ -91,7 +88,6 @@ jobs:
       - name: Deploy
         run: >
           mvn --batch-mode
-          -Dmaven.main.skip
           -Dmaven.test.skip=true
           -Dmaven.install.skip=true
           deploy
