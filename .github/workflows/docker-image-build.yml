@@ -23,11 +23,11 @@ jobs:
   docker-image-build:
     runs-on: ubuntu-latest
     env:
-      ORGANIZATION=${{ inputs.docker-organization }}
-      IMAGE_NAME=${{ inputs.docker-image-name }}
-      PROJECT_PATH=${{ inputs.project-path }}
-      DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
-      DOCKER_HUB_PASSWORD=${{ secrets.DOCKER_HUB_PASSWORD }}
+      ORGANIZATION: ${{ inputs.docker-organization }}
+      IMAGE_NAME: ${{ inputs.docker-image-name }}
+      PROJECT_PATH: ${{ inputs.project-path }}
+      DOCKER_HUB_USERNAME: ${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_PASSWORD: ${{ secrets.DOCKER_HUB_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
