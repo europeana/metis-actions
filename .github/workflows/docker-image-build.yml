@@ -22,6 +22,12 @@ on:
 jobs:
   docker-image-build:
     runs-on: ubuntu-latest
+    env:
+      ORGANIZATION=${{ inputs.docker-organization }}
+      IMAGE_NAME=${{ inputs.docker-image-name }}
+      PROJECT_PATH=${{ inputs.project-path }}
+      DOCKER_HUB_USERNAME=${{ secrets.DOCKER_HUB_USERNAME }}
+      DOCKER_HUB_PASSWORD=${{ secrets.DOCKER_HUB_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -32,16 +38,13 @@ jobs:
           name: target-jars
       - name: Build Docker Image
         run: |
-          ORGANIZATION=${{ inputs.docker-organization }}
-          IMAGE_NAME=${{ inputs.docker-image-name }}
-          echo "Starting docker build ${IMAGE_NAME}\n"
+          echo "Starting docker build ${IMAGE_NAME}"
 
           GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')
           #When using Jenkins git, we need to get the variable from the input otherwise it points to HEAD with the above command
           #GIT_BRANCH=$(echo "${BRANCH}" | sed 's/[^a-zA-Z0-9]/-/g')
           GIT_REVISION=$(git rev-parse --short HEAD)
           PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          PROJECT_PATH=${{ inputs.project-path }}
 
           set -x
           #Docker build
