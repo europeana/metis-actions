@@ -1,7 +1,7 @@
 name: DEPLOY ARTIFACTS
 
-# REPOSITORY_USERNAME (maven)
-# REPOSITORY_PASSWORD (maven)
+# ARTIFACTORY_USERNAME (maven)
+# ARTIFACTORY_PASSWORD (maven)
 on:
   workflow_call:
 
@@ -10,9 +10,9 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop' || contains(github.ref, 'refs/tags/')}}
     runs-on: ubuntu-latest
     env:
-      REPOSITORY_ID: artifactory.eanadev.org
-      REPOSITORY_USERNAME: ${{ secrets.REPOSITORY_USERNAME }}
-      REPOSITORY_PASSWORD: ${{ secrets.REPOSITORY_PASSWORD }}
+      ARTIFACTORY_ID: artifactory.eanadev.org
+      ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+      ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
     steps:
       - name: Checkout code
@@ -28,7 +28,7 @@ jobs:
       - name: Prepare Settings Deploy
         run: >
           mkdir -p ~/.m2 &&
-          echo "<settings><servers><server><id>${REPOSITORY_ID}</id><username>${REPOSITORY_USERNAME}</username><password>${REPOSITORY_PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
+          echo "<settings><servers><server><id>${ARTIFACTORY_ID}</id><username>${ARTIFACTORY_USERNAME}</username><password>${ARTIFACTORY_PASSWORD}</password></server></servers></settings>" > ~/.m2/settings.xml
       - name: Deploy
         run: >
           mvn --batch-mode
