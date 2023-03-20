@@ -57,7 +57,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - uses: actions/upload-artifact@v3
         with:
-          name: target-directories
+          name: target-jars
           path: ./**/target/*.jar
           retention-days: 1
 
@@ -77,6 +77,11 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
           cache: maven
+      - uses: actions/download-artifact@v3
+        with:
+          name: target-jars
+      - name: LS JARS
+        run: ls -la ./**/target/*.jar
       - name: Prepare Settings Deploy
         run: >
           mkdir -p ~/.m2 &&
