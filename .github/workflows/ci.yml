@@ -81,7 +81,7 @@ jobs:
         with:
           name: target-jars
       - name: LS JARS
-        run: ls -la ./**/target/*.jar
+        run: ls -la ./**/*
       - name: Prepare Settings Deploy
         run: >
           mkdir -p ~/.m2 &&
