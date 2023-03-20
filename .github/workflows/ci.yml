@@ -58,7 +58,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: target-directories
-          path: ./**/target/
+          path: ./**/target/*.jar
           retention-days: 1
 
   deploy_libraries:
