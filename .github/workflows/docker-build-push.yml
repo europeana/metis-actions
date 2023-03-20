@@ -20,7 +20,7 @@ on:
         type: string
 
 jobs:
-  docker-image-build:
+  docker-build-push:
     runs-on: ubuntu-latest
     env:
       ORGANIZATION: ${{ inputs.docker-organization }}
