@@ -13,8 +13,6 @@ on:
         type: string
 
     secrets:
-      GITHUB_TOKEN:
-        required: true
       SONAR_TOKEN:
         required: true
       PERSONAL_ACCESS_TOKEN:
