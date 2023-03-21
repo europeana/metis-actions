@@ -34,9 +34,7 @@ jobs:
         run: |
           ibmcloud login -a "${IBM_CLOUD_API_ENDPOINT}" -r "${IBM_CLOUD_REGION}" --apikey "${IBM_CLOUD_API_KEY}"
           ibmcloud ks cluster config --cluster "${IBM_CLOUD_K8S_CLUSTER_NAME}"
-          ls -la ~/
-          echo ${KUBECONFIG}
-          ls -la $HOME
+          ls -la ~/.kube
       - name: Set output kube config
         id: kube-config
         run: echo "kube-config=$(cat ${HOME}/.kube/config)" >> $GITHUB_OUTPUT
