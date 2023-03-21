@@ -36,6 +36,7 @@ jobs:
           ibmcloud ks cluster config --cluster "${IBM_CLOUD_K8S_CLUSTER_NAME}"
           ls ~/
           echo ${KUBECONFIG}
+          cat $HOME/.kube/config | base64 .
       - name: Set output kube config
         id: kube-config
         run: echo "kube-config=$(cat ${HOME}/.kube/config)" >> $GITHUB_OUTPUT
