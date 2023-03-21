@@ -18,6 +18,11 @@ on:
         description: 'Project Path'
         required: true
         type: string
+    secrets:
+      DOCKER_HUB_USERNAME:
+        required: true
+      DOCKER_HUB_PASSWORD:
+        required: true
 
 jobs:
   docker-build-push:
