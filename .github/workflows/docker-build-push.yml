@@ -1,7 +1,4 @@
 
-#Requires inherited secrets:
-# DOCKER_HUB_USERNAME
-# DOCKER_HUB_PASSWORD
 # target-jars pre-uploaded artifacts
 on:
   workflow_call:

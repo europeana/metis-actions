@@ -1,7 +1,5 @@
 name: RELEASE
 
-#Requires inherited secrets:
-# secrets.PERSONAL_ACCESS_TOKEN
 on:
   workflow_call:
     inputs:
@@ -18,6 +16,9 @@ on:
         required: false
         default: develop
         type: string
+    secrets:
+      PERSONAL_ACCESS_TOKEN:
+        required: true
 
 jobs:
   release:
