@@ -1,9 +1,12 @@
 name: DEPLOY ARTIFACTS
 
-# ARTIFACTORY_USERNAME (maven)
-# ARTIFACTORY_PASSWORD (maven)
 on:
   workflow_call:
+    secrets:
+      ARTIFACTORY_USERNAME:
+        required: true
+      ARTIFACTORY_PASSWORD:
+        required: true
 
 jobs:
   deploy_libraries:
