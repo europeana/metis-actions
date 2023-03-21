@@ -1,9 +1,5 @@
 name: CI
 
-#Requires inherited secrets:
-# GITHUB_TOKEN
-# SONAR_TOKEN
-# PERSONAL_ACCESS_TOKEN
 on:
   workflow_call:
     inputs:
@@ -15,6 +11,14 @@ on:
         description: 'Sonar Project Key'
         required: true
         type: string
+
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+      SONAR_TOKEN:
+        required: true
+      PERSONAL_ACCESS_TOKEN:
+        required: true
 
 jobs:
   build:
