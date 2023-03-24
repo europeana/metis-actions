@@ -17,7 +17,7 @@ on:
         default: develop
         type: string
     secrets:
-      PERSONAL_ACCESS_TOKEN:
+      METIS_PERSONAL_ACCESS_TOKEN:
         required: true
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
         with:
           fetch-depth: 0
           # USE PERSONAL ACCESS TOKEN instead of the default to allow triggering CI workflow
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
           ref: master
 
       - name: Setup git config

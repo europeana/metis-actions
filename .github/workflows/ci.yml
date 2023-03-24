@@ -14,8 +14,6 @@ on:
     secrets:
       SONAR_TOKEN:
         required: true
-      PERSONAL_ACCESS_TOKEN:
-        required: true
 
 jobs:
   build:
