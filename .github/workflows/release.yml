@@ -16,6 +16,11 @@ on:
         required: false
         default: develop
         type: string
+      target-merge-branch:
+        description: 'The target branch to merge to. This gives an option for newer repos that use main instead of master.(default: master)'
+        required: false
+        default: master
+        type: string
     secrets:
       METIS_PERSONAL_ACCESS_TOKEN:
         required: true
@@ -30,7 +35,7 @@ jobs:
           fetch-depth: 0
           # USE PERSONAL ACCESS TOKEN instead of the default to allow triggering CI workflow
           token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
-          ref: master
+          ref: ${{ github.event.inputs.target-merge-branch }}
 
       - name: Setup git config
         run: |
@@ -55,7 +60,7 @@ jobs:
       - name: Checkout Master and merge reference with default commit message
         # --strategy-option theirs is added for the case where the version is updated on both branches(could potential be removed)
         run: |
-          git checkout master
+          git checkout ${{ github.event.inputs.target-merge-branch }}
           git merge release/v${{ github.event.inputs.release-version }} --strategy-option theirs --no-edit
 
       - name: Tag commit with provided version and push
