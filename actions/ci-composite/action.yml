@@ -1,5 +1,5 @@
-name: 'General ci'
-description: 'General ci'
+name: 'Build code and Sonar Analyze'
+description: 'Build code and Sonar Analyze'
 inputs:
   sonar_organization:
     description: 'Sonar Organization'
