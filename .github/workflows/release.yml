@@ -32,14 +32,14 @@ jobs:
       - name: Checkout code (source)
         uses: actions/checkout@v3
         with:
-          fetch-depth: 1
+          fetch-depth: 0
           # USE PERSONAL ACCESS TOKEN instead of the default to allow triggering CI workflow
           token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
           ref: ${{ inputs.commit-hash-branch }}
 
       - name: 'Fetch target branch'
         run: |
-          git fetch origin ${{ inputs.target-merge-branch }} --depth 1
+          git fetch origin ${{ inputs.target-merge-branch }} --depth 0
           git branch
 
       - name: Setup git config
@@ -56,6 +56,7 @@ jobs:
           find . -name 'pom.xml' | xargs git add
           git commit -m "Set release version ${{ github.event.inputs.release-version }}"
 
+        #It will fail if the branch already exists
       - name: Push release branch
         run: git push -u origin release/v${{ inputs.release-version }}
 
