@@ -36,11 +36,15 @@ jobs:
           # USE PERSONAL ACCESS TOKEN instead of the default to allow triggering CI workflow
           token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
           ref: ${{ inputs.commit-hash-branch }}
+      - name: 'Fetch target branch'
+        run: |
+          git fetch origin ${{ inputs.target-merge-branch }} --depth 1
+          git branch
 
       - name: Setup git config
         run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --local user.name 'github-actions[bot]'
+          git config --local user.email 'github-actions[bot]@users.noreply.github.com'
 
 #      - name: Checkout reference to have a local copy
 #        run: git -c advice.detachedHead=false checkout ${{ github.event.inputs.commit-hash-branch }}
@@ -61,8 +65,8 @@ jobs:
         # --strategy-option theirs is added for the case where the version is updated on both branches(could potential be removed)
         run: |
           git checkout ${{ inputs.target-merge-branch }}
-          git merge release/v${{ inputs.release-version }} --strategy-option theirs --no-edit
-          git push
+#          git merge release/v${{ inputs.release-version }} --strategy-option theirs --no-edit
+#          git push
 
 #      - name: Tag commit with provided version and push
 #        run: |
