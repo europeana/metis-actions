@@ -37,10 +37,10 @@ jobs:
           token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
           ref: ${{ inputs.commit-hash-branch }}
 
-      - name: 'Fetch target branch'
-        run: |
-          git fetch origin ${{ inputs.target-merge-branch }} --depth 0
-          git branch
+#      - name: 'Fetch target branch'
+#        run: |
+#          git fetch origin ${{ inputs.target-merge-branch }} --depth 0
+#          git branch
 
       - name: Setup git config
         run: |
