@@ -67,53 +67,53 @@ jobs:
           git tag v${{ inputs.release-version }}
           git push
           git push origin v${{ inputs.release-version }}
-#
-#      - name: Generate changelog between last two release tags (v*)
-#        run: |
-#          VERSIONS_RANGE=`git tag --sort=-creatordate  | head -2 | tail -1`..`git tag --sort=-creatordate | head -1`
-#          echo "VERSIONS_RANGE: ${VERSIONS_RANGE}"
-#          git log --pretty="%s" ${VERSIONS_RANGE} > changelog.txt
-#
-#      - name: Curate changelog to releaselog
-#        run: |
-#          grep -i '^feat\|feature' changelog.txt > feature.txt || true
-#          grep -i '^debt' changelog.txt > debt.txt || true
-#          grep -i '^bug' changelog.txt > bug.txt || true
-#          grep -i -v '^feat\|feature\|debt\|bug' changelog.txt > miscellaneous.txt || true
-#
-#          echo -e "FEATURES:" >> releaselog.txt
-#          cat feature.txt >> releaselog.txt
-#          echo -e >> releaselog.txt
-#
-#          echo -e "DEBT:" >> releaselog.txt
-#          cat debt.txt >> releaselog.txt
-#          echo -e >> releaselog.txt
-#
-#          echo -e "BUGS:" >> releaselog.txt
-#          cat bug.txt >> releaselog.txt
-#          echo -e >> releaselog.txt
-#
-#          echo -e "MISCELLANEOUS:" >> releaselog.txt
-#          cat miscellaneous.txt >> releaselog.txt
-#          echo -e >> releaselog.txt
-#          cat releaselog.txt
-#
-#      - name: Create Github release
-#        uses: ncipollo/release-action@v1
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          bodyFile: "releaselog.txt"
-#          tag: v${{ inputs.release-version }}
-#          draft: true
-#
-#      - name: Checkout reference
-#        run: git -c advice.detachedHead=false checkout ${{ inputs.commit-hash-branch }}
-#
-#      - name: Update versions on poms(reference) and commit(If the version is the same with what is already in the pom the build will fail)
-#        run: |
-#          mvn versions:set -DnewVersion=${{ inputs.new-snapshot-version }} -DgenerateBackupPoms=false --quiet
-#          find . -name 'pom.xml' | xargs git add
-#          git commit -m "Set new snapshot version ${{ inputs.new-snapshot-version }}"
-#
-#      - name: Push updated reference
-#        run: git push origin ${{ inputs.commit-hash-branch }}
+
+      - name: Generate changelog between last two release tags (v*)
+        run: |
+          VERSIONS_RANGE=`git tag --sort=-creatordate  | head -2 | tail -1`..`git tag --sort=-creatordate | head -1`
+          echo "VERSIONS_RANGE: ${VERSIONS_RANGE}"
+          git log --pretty="%s" ${VERSIONS_RANGE} > changelog.txt
+
+      - name: Curate changelog to releaselog
+        run: |
+          grep -i '^feat\|feature' changelog.txt > feature.txt || true
+          grep -i '^debt' changelog.txt > debt.txt || true
+          grep -i '^bug' changelog.txt > bug.txt || true
+          grep -i -v '^feat\|feature\|debt\|bug' changelog.txt > miscellaneous.txt || true
+
+          echo -e "FEATURES:" >> releaselog.txt
+          cat feature.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+
+          echo -e "DEBT:" >> releaselog.txt
+          cat debt.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+
+          echo -e "BUGS:" >> releaselog.txt
+          cat bug.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+
+          echo -e "MISCELLANEOUS:" >> releaselog.txt
+          cat miscellaneous.txt >> releaselog.txt
+          echo -e >> releaselog.txt
+          cat releaselog.txt
+
+      - name: Create Github release
+        uses: ncipollo/release-action@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          bodyFile: "releaselog.txt"
+          tag: v${{ inputs.release-version }}
+          draft: true
+
+      - name: Checkout reference
+        run: git checkout ${{ inputs.commit-hash-branch }}
+
+      - name: Update versions on poms(reference) and commit(If the version is the same with what is already in the pom the build will fail)
+        run: |
+          mvn versions:set -DnewVersion=${{ inputs.new-snapshot-version }} -DgenerateBackupPoms=false --quiet
+          find . -name 'pom.xml' | xargs git add
+          git commit -m "Set new snapshot version ${{ inputs.new-snapshot-version }}"
+
+      - name: Push updated reference
+        run: git push origin ${{ inputs.commit-hash-branch }}
