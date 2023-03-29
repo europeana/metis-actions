@@ -51,4 +51,4 @@ runs:
         sonar:sonar
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ inputs.SONAR_TOKEN }}
+        SONAR_TOKEN: ${{ inputs.sonar_token }}
