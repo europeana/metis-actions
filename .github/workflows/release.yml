@@ -29,18 +29,18 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code (source)
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          # USE PERSONAL ACCESS TOKEN instead of the default to allow triggering CI workflow
-          token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
-          ref: ${{ inputs.commit-hash-branch }}
-
       - name: Setup git config
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Checkout code (source)
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+          # USE PERSONAL ACCESS TOKEN instead of the default to allow triggering CI workflow
+          token: ${{ secrets.METIS_PERSONAL_ACCESS_TOKEN }}
+          ref: ${{ inputs.commit-hash-branch }}
 
 #      - name: Checkout reference to have a local copy
 #        run: git -c advice.detachedHead=false checkout ${{ github.event.inputs.commit-hash-branch }}
@@ -56,13 +56,14 @@ jobs:
 
       - name: Push release branch
         run: git push -u origin release/v${{ inputs.release-version }}
-#
-#      - name: Checkout Master and merge reference with default commit message
-#        # --strategy-option theirs is added for the case where the version is updated on both branches(could potential be removed)
-#        run: |
-#          git checkout ${{ github.event.inputs.target-merge-branch }}
-#          git merge release/v${{ github.event.inputs.release-version }} --strategy-option theirs --no-edit
-#
+
+      - name: Checkout Master and merge reference with default commit message
+        # --strategy-option theirs is added for the case where the version is updated on both branches(could potential be removed)
+        run: |
+          git checkout ${{ inputs.target-merge-branch }}
+          git merge release/v${{ inputs.release-version }} --strategy-option theirs --no-edit
+          git push
+
 #      - name: Tag commit with provided version and push
 #        run: |
 #          git tag v${{ github.event.inputs.release-version }}
