@@ -57,7 +57,7 @@ jobs:
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
           -f ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
-          if [ -z "${GIT_TAG}" ]; then
+          if [ ! -z "${GIT_TAG}" ]; then
             docker tag ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
           fi
           set +x
@@ -66,11 +66,10 @@ jobs:
       - name: Docker Push
         run: |
           set -x
-          #Docker push image with all tags(subsequent tags do not transmit data again)
           docker push ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION}
           docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH}
           docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION}
-          if [ -z "${GIT_TAG}" ]; then
+          if [ ! -z "${GIT_TAG}" ]; then
             docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
           fi
           set +x
