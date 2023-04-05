@@ -44,14 +44,14 @@ jobs:
           echo "GIT_REVISION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "GIT_TAG=$(git describe --exact-match --tags HEAD)" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-          echo "All tags:"
+      - name: Build Docker Image
+        run: |
+          set -x
+          echo "Dynamic tags to use:"
           echo "${PROJECT_VERSION}"
           echo "${GIT_BRANCH}"
           echo "${GIT_REVISION}"
           echo "${GIT_TAG}"
-      - name: Build Docker Image
-        run: |
-          set -x
           docker build  \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
