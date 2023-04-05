@@ -53,7 +53,7 @@ jobs:
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
           -f ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
           if [ -z "${GIT_TAG}" ]; then
-            docker tag ${IMAGE_NAME}:${PROJECT_VERSION} ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
+            docker tag ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
           fi
           set +x
       - name: Docker Login
