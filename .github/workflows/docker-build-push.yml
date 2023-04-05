@@ -38,20 +38,15 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: target-jars
-      - name: Set dynamic environment variables
+      - name: Set dynamic environment variables for docker image tags
         run: |
           echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')" >> $GITHUB_ENV
           echo "GIT_REVISION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "GIT_TAG=$(git describe --exact-match --tags HEAD)" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
-      - name: Build Docker Image
+      - name: Build Docker Image with tags
         run: |
           set -x
-          echo "Dynamic tags to use:"
-          echo "${PROJECT_VERSION}"
-          echo "${GIT_BRANCH}"
-          echo "${GIT_REVISION}"
-          echo "${GIT_TAG}"
           docker build  \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
