@@ -42,16 +42,19 @@ jobs:
         run: |
           echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')" >> $GITHUB_ENV
           echo "GIT_REVISION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+          echo "GIT_TAG=$(git describe --exact-match --tags HEAD)" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
       - name: Build Docker Image
         run: |
           set -x
-          #Docker build
           docker build  \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
           -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
           -f ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
+          if [ -z "${GIT_TAG}" ]; then
+            docker tag ${IMAGE_NAME}:${PROJECT_VERSION} ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
+          fi
           set +x
       - name: Docker Login
         run: echo "${DOCKER_HUB_PASSWORD}" | docker login --username ${DOCKER_HUB_USERNAME} --password-stdin
@@ -62,4 +65,7 @@ jobs:
           docker push ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION}
           docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH}
           docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION}
+          if [ -z "${GIT_TAG}" ]; then
+            docker push ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
+          fi
           set +x
