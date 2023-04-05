@@ -44,6 +44,11 @@ jobs:
           echo "GIT_REVISION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "GIT_TAG=$(git describe --exact-match --tags HEAD)" >> $GITHUB_ENV
           echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          echo "All tags:"
+          echo "$PROJECT_VERSION"
+          echo "$GIT_BRANCH"
+          echo "$GIT_REVISION"
+          echo "$GIT_TAG"
       - name: Build Docker Image
         run: |
           set -x
