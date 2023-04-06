@@ -43,15 +43,15 @@ jobs:
           echo "GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD | sed 's/[^a-zA-Z0-9]/-/g')" >> $GITHUB_ENV
           echo "GIT_REVISION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
           echo "GIT_TAG=$(git describe --exact-match --tags HEAD)" >> $GITHUB_ENV
-          echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_ENV
+          echo "PROJECT_VERSION=$(mvn help:evaluate -Dexpression=project.version --quiet -DforceStdout)" >> $GITHUB_ENV
       - name: Build Docker Image with tags
         run: |
           set -x
           docker build  \
-          -t ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
-          -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
-          -t ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
-          -f ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
+          --tag ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
+          --tag ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
+          --tag ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
+          --tag ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
           if [ ! -z "${GIT_TAG}" ]; then
             docker tag ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
           fi

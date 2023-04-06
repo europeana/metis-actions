@@ -76,10 +76,14 @@ jobs:
 
       - name: Curate changelog to releaselog
         run: |
-          grep -i '^feat\|feature' changelog.txt > feature.txt || true
-          grep -i '^debt' changelog.txt > debt.txt || true
-          grep -i '^bug' changelog.txt > bug.txt || true
-          grep -i -v '^feat\|feature\|debt\|bug' changelog.txt > miscellaneous.txt || true
+          grep --ignore-case '^feat\|feature' changelog.txt > feature.txt || true
+          grep --ignore-case '^debt' changelog.txt > debt.txt || true
+          grep --ignore-case '^bug' changelog.txt > bug.txt || true
+          grep --ignore-case --invert-match '^feat\|feature\|debt\|bug' changelog.txt > miscellaneous.txt || true
+          
+          sed --in-place 's/^\(feat\|feature\)\///Ig' feature.txt
+          sed --in-place 's/^debt\///Ig' debt.txt
+          sed --in-place 's/^bug\///Ig' bug.txt
 
           echo -e "FEATURES:" >> releaselog.txt
           cat feature.txt >> releaselog.txt
@@ -96,6 +100,8 @@ jobs:
           echo -e "MISCELLANEOUS:" >> releaselog.txt
           cat miscellaneous.txt >> releaselog.txt
           echo -e >> releaselog.txt
+          
+          sed --in-place 's/MET[ -]/MET-/Ig' releaselog.txt
           cat releaselog.txt
 
       - name: Create Github release
