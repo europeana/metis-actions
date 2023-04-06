@@ -51,7 +51,7 @@ jobs:
           --tag ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} \
           --tag ${ORGANIZATION}/${IMAGE_NAME}:${GIT_BRANCH} \
           --tag ${ORGANIZATION}/${IMAGE_NAME}:${GIT_REVISION} \
-          --tag ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
+          --file ${PROJECT_PATH}/Dockerfile ${PROJECT_PATH}
           if [ ! -z "${GIT_TAG}" ]; then
             docker tag ${ORGANIZATION}/${IMAGE_NAME}:${PROJECT_VERSION} ${ORGANIZATION}/${IMAGE_NAME}:${GIT_TAG}
           fi
