@@ -1,0 +1,12 @@
+name: 'Upload all jars to target-jars'
+
+description: 'Upload all jars to target-jars'
+runs:
+  using: "composite"
+  steps:
+    - name: Upload all jars to target-jars
+      uses: actions/upload-artifact@v3
+      with:
+        name: target-jars
+        path: ./**/target/*.jar
+        retention-days: 1
