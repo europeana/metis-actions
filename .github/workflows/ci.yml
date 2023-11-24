@@ -24,7 +24,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build code and Sonar Analyze
-        uses: europeana/metis-actions/actions/build-analyze@main
+        uses: europeana/metis-actions/actions/build-analyze@jdk17
         with:
           sonar_organization: ${{ inputs.sonar_organization }}
           sonar_project_key: ${{ inputs.sonar_project_key }}
