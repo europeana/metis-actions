@@ -5,7 +5,7 @@ runs:
   using: "composite"
   steps:
     - name: Upload all jars to target-jars
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: target-jars
         path: ./**/target/*.jar
