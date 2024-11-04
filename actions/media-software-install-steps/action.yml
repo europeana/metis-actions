@@ -9,11 +9,10 @@ runs:
       run: sudo apt update
     - name: Setup ImageMagick
       shell: bash
-      run: sudo apt install imagemagick
-    - name: Setup FFmpeg
-      uses: Iamshankhadeep/setup-ffmpeg@v1.2
-      with:
-        version: "4.1"
+      run: sudo apt install imagemagick -y
+    - name: Setup ffmpeg
+      shell: bash
+      run: sudo apt-get install ffmpeg -y
     - name: Setup Ghostscript
       shell: bash
       run: sudo apt-get install ghostscript -y
