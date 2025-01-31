@@ -115,11 +115,12 @@ jobs:
       - name: Checkout reference
         run: git checkout ${{ inputs.commit-hash-branch }}
 
-      - name: Update versions on poms(reference) and commit(If the version is the same with what is already in the pom the build will fail)
+      - name: Update versions on poms(reference) and commit
+        #If the version was the same it will not perform a commit
         run: |
           mvn versions:set -DnewVersion=${{ inputs.new-snapshot-version }} -DgenerateBackupPoms=false --quiet
           find . -name 'pom.xml' | xargs git add
-          git commit -m "Set new snapshot version ${{ inputs.new-snapshot-version }}"
+          git diff-index --quiet HEAD || git commit -m "Set new snapshot version ${{ inputs.new-snapshot-version }}"
 
       - name: Push updated reference
         run: git push origin ${{ inputs.commit-hash-branch }}
