@@ -115,12 +115,19 @@ jobs:
       - name: Checkout reference
         run: git checkout ${{ inputs.commit-hash-branch }}
 
-      - name: Update versions on poms(reference) and commit
-        #If the version was the same it will not perform a commit
+      - name: Update versions on poms(reference) and commit. If it is the same version as the current version, it will skip the commit.
         run: |
-          mvn versions:set -DnewVersion=${{ inputs.new-snapshot-version }} -DgenerateBackupPoms=false --quiet
-          find . -name 'pom.xml' | xargs git add
-          git diff-index --quiet HEAD || git commit -m "Set new snapshot version ${{ inputs.new-snapshot-version }}"
+          CURRENT_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "Current version is $CURRENT_VERSION"
+          echo "Target snapshot version is ${{ inputs.new-snapshot-version }}"
+          
+          if [ "$CURRENT_VERSION" != "${{ inputs.new-snapshot-version }}" ]; then
+            mvn versions:set -DnewVersion=${{ inputs.new-snapshot-version }} -DgenerateBackupPoms=false --quiet
+            find . -name 'pom.xml' | xargs git add
+            git commit -m "Set new snapshot version ${{ inputs.new-snapshot-version }}"
+          else
+            echo "Version already at $CURRENT_VERSION, skipping snapshot update"
+          fi
 
       - name: Push updated reference
         run: git push origin ${{ inputs.commit-hash-branch }}
