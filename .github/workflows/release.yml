@@ -42,7 +42,7 @@ jobs:
           git config --local user.name 'github-actions[bot]'
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
 
-      - name: Create release branch
+      - name: Create release branch(If the branch already exists it will be deleted)
         run: |
           RELEASE_BRANCH="release/v${{ inputs.release-version }}"
     
@@ -67,7 +67,6 @@ jobs:
           find . -name 'pom.xml' | xargs git add
           git commit -m "Set release version ${{ github.event.inputs.release-version }}"
 
-        #It will fail if the branch already exists
       - name: Push release branch
         run: git push -u origin release/v${{ inputs.release-version }}
 
