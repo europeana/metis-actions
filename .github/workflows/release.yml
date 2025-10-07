@@ -43,7 +43,23 @@ jobs:
           git config --local user.email 'github-actions[bot]@users.noreply.github.com'
 
       - name: Create release branch
-        run: git checkout -b release/v${{ inputs.release-version }}
+        run: |
+          RELEASE_BRANCH="release/v${{ inputs.release-version }}"
+    
+          # If the branch exists locally, delete it
+          if git show-ref --verify --quiet refs/heads/$RELEASE_BRANCH; then
+            echo "Deleting existing local branch $RELEASE_BRANCH"
+            git branch -D $RELEASE_BRANCH
+          fi
+      
+          # If the branch exists remotely, delete it
+          if git ls-remote --exit-code --heads origin $RELEASE_BRANCH >/dev/null 2>&1; then
+            echo "Deleting existing remote branch $RELEASE_BRANCH"
+            git push origin --delete $RELEASE_BRANCH
+          fi
+      
+          # Create fresh release branch from the specified base
+          git checkout -b $RELEASE_BRANCH
 
       - name: Update versions on poms(release) and commit(If the version is the same with what is already in the pom the build will fail)
         run: |
