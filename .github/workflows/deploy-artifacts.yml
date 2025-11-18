@@ -13,7 +13,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop' || contains(github.ref, 'refs/tags/')}}
     runs-on: ubuntu-latest
     env:
-      ARTIFACTORY_ID: artifactory.eanadev.org
+      ARTIFACTORY_ID: artifactory-prod.eanadev.org
       ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
       ARTIFACTORY_PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
 
