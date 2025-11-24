@@ -48,7 +48,7 @@ runs:
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=${{ inputs.sonar_organization }}
         -Dsonar.projectKey=${{ inputs.sonar_project_key }}
-        sonar:sonar
+        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ inputs.sonar_token }}
